@@ -1,12 +1,10 @@
-# com.octopus8.external_id_validator
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+# External ID Validator
+> [!CAUTION]
+> This extension is in it's alpha-beta stage, if you have any errors please send a report!
 
 This is an [extension for CiviCRM](https://docs.civicrm.org/sysadmin/en/latest/customize/extensions/), licensed under [AGPL-3.0](LICENSE.txt).
 
-## Getting Started
+## Overview
 
-(* FIXME: Where would a new user navigate to get started? What changes would they see? *)
+This extension checks if external identifier is a valid Singapore NRIC/FIN (Indiviual) or UEN (Org), UEN Validation allows for [Buisness, Companies and Entities Formatting](https://www.uen.gov.sg/ueninternet/faces/pages/admin/aboutUEN.jspx)
 
-## Known Issues
-
-(* FIXME *)
