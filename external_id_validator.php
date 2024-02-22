@@ -40,7 +40,7 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
 
       $FIN = CRM_Utils_Array::value('external_identifier', $fields );
 
-      if ($FIN){
+      if (strlen($FIN) > 0){
         //check if external id is less or equal to 9
         if (strlen($FIN) != 9){
           $errors['external_identifier'] = ts( 'NRIC/FIN must have 9 characters' );
@@ -57,6 +57,10 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
           }
           if (!extidvald_validLetter($suffix)){
             $errors['external_identifier'] = ts( 'Suffix must be a letter.' );
+            return;
+          }
+          if (substr($FIN, -1) != strtoupper($suffix)){
+            $errors['external_identifier'] = ts( 'Suffix must be uppercase.' );
             return;
           }
 
@@ -81,22 +85,22 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
             
             //suffix of id is a checksum, obtained via modulus 11 method;
             $calculateSuffix = $suffixList[extidvald_calculateChecksum($upperFIN, $prefix)];
+            $test = extidvald_calculateChecksum($upperFIN, $prefix);
             
             //suffix of id is a checksum, will check if input suffix and calculatedsuffix is the same;
             if ($suffix != $calculateSuffix){
-              $errors['external_identifier'] = ts( 'Suffix ( Checksum char ) is incorrect.' );
+              $errors['external_identifier'] = ts( 'Suffix ( Checksum char ) is incorrect. ' . $calculateSuffix .  $test);
             }
           } else {
             $errors['external_identifier'] = ts( 'Digits must be numbers.' );
           }
         }
       } else {
-        $errors['external_identifier'] = ts( 'Please enter NRIC/FIN.' );
       }
 
     } else if ($contactType == "Organization"){
       $UEN = CRM_Utils_Array::value('external_identifier', $fields );
-      if ($UEN){
+      if (strlen($UEN) > 0){
         $upperUEN = strtoupper($UEN);
         $lengthUEN = strlen($upperUEN);
         //FOR BUISNESSES 
@@ -158,7 +162,6 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
           $errors['external_identifier'] = ts( 'UEN must be 9 or 10 characters long.' );
         }
       } else {
-        $errors['external_identifier'] = ts( 'Please enter UEN.' );
       }
     } else {
       //ot'er contact types?
@@ -174,8 +177,13 @@ function extidvald_calculateChecksum($id, $prefix) : int {
     $totalsum += $digitsonly[$i] * $checksumArr[$i];
   }
 
-  //If prefix is equal to M, plus 3 to sum, otherwise plus 4
-  $totalsum += $prefix == "M" ? 3 : 4;
+  if ($prefix == "T" || $prefix == "G") {
+    $totalsum += 4; // No change for "S" prefix
+  } else if ($prefix == "M") {
+    $totalsum += 3; // Add 3 for "M" prefix
+  } else {
+    $totalsum += 0; // Add 4 for other prefixes
+  }
   
   //divide sum by 11 and get remainer
   $totalsum = $totalsum % 11;
