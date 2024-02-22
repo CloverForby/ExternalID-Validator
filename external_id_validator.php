@@ -55,6 +55,10 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
             $errors['external_identifier'] = ts( 'Prefix must be a letter.' );
             return;
           }
+		  if (substr($FIN, 0, 1) != strtoupper($prefix)){
+            $errors['external_identifier'] = ts( 'Prefix must be uppercase.' );
+            return;
+          }
           if (!extidvald_validLetter($suffix)){
             $errors['external_identifier'] = ts( 'Suffix must be a letter.' );
             return;
@@ -85,11 +89,10 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
             
             //suffix of id is a checksum, obtained via modulus 11 method;
             $calculateSuffix = $suffixList[extidvald_calculateChecksum($upperFIN, $prefix)];
-            $test = extidvald_calculateChecksum($upperFIN, $prefix);
             
             //suffix of id is a checksum, will check if input suffix and calculatedsuffix is the same;
             if ($suffix != $calculateSuffix){
-              $errors['external_identifier'] = ts( 'Suffix ( Checksum char ) is incorrect. ' . $calculateSuffix .  $test);
+              $errors['external_identifier'] = ts( 'Suffix ( Checksum char ) is incorrect.');
             }
           } else {
             $errors['external_identifier'] = ts( 'Digits must be numbers.' );
