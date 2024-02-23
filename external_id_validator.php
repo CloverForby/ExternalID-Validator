@@ -55,16 +55,8 @@ function external_id_validator_civicrm_validateForm($formName, &$fields, &$files
             $errors['external_identifier'] = ts( 'Prefix must be a letter.' );
             return;
           }
-		  if (substr($FIN, 0, 1) != strtoupper($prefix)){
-            $errors['external_identifier'] = ts( 'Prefix must be uppercase.' );
-            return;
-          }
           if (!extidvald_validLetter($suffix)){
             $errors['external_identifier'] = ts( 'Suffix must be a letter.' );
-            return;
-          }
-          if (substr($FIN, -1) != strtoupper($suffix)){
-            $errors['external_identifier'] = ts( 'Suffix must be uppercase.' );
             return;
           }
 
